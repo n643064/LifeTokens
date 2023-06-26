@@ -1,19 +1,21 @@
-package n643064.isv.item;
+package n643064.life_tokens;
 
-import n643064.isv.HealthState;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 import java.util.Objects;
 
-import static n643064.isv.Config.CONFIG_INSTANCE;
+import static n643064.life_tokens.Config.CONFIG;
+
 
 public class LifeTokenItem extends Item
 {
@@ -30,25 +32,26 @@ public class LifeTokenItem extends Item
         {
             return TypedActionResult.fail(stack);
         }
-        if (user.getMaxHealth() < CONFIG_INSTANCE.maxLife())
+        if (user.getMaxHealth() < CONFIG.maxLife())
         {
             final HealthState state = HealthState.get(Objects.requireNonNull(user.getServer()));
             final String name = user.getEntityName();
             final int v;
             if (state.map.containsKey(name))
             {
-                v = state.map.get(user.getEntityName()) + CONFIG_INSTANCE.lifeTokenIncrement();
+                v = state.map.get(user.getEntityName()) + CONFIG.lifeIncrement();
             } else
             {
-                v = CONFIG_INSTANCE.starterLife() + CONFIG_INSTANCE.lifeTokenIncrement();
+                v = CONFIG.starterLife() + CONFIG.lifeIncrement();
             }
             state.map.put(name, v);
             state.markDirty();
             Objects.requireNonNull(user.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(v);
             stack.decrement(1);
-            user.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 0.6f);
+            user.playSound(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, SoundCategory.PLAYERS, 0.8f, 2f);
             return TypedActionResult.success(stack);
         }
+        user.sendMessage(Text.translatable("life_tokens.limit_reached").formatted(Formatting.DARK_RED), true);
         return TypedActionResult.fail(stack);
     }
 

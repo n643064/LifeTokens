@@ -1,0 +1,7 @@
+{
+  "item.life_tokens.life_token_bit": "Life Token Bit",
+  "item.life_tokens.life_token_shard": "Life Token Shard",
+  "item.life_tokens.life_token": "Life Token",
+
+  "life_tokens.limit_reached": "Life limit reached"
+}

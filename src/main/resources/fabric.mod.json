@@ -3,8 +3,10 @@
   "id": "life_tokens",
   "version": "${version}",
   "name": "Life Tokens",
-  "description": "",
-  "authors": [],
+  "description": "Adds life tokens, which increase player health by a set amount",
+  "authors": [
+    "n643064"
+  ],
   "contact": {
     "repo": "https://github.com/n643064/LifeTokens"
   },
@@ -13,18 +15,16 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "n643064.life_tokens.client.LifeTokensClient"
     ],
     "main": [
       "n643064.life_tokens.LifeTokens"
     ]
   },
   "mixins": [
-    "life_tokens.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": ">=${minecraft_version}"
   }
 }

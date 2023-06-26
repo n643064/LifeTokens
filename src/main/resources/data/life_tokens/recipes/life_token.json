@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "#": {
-      "item": "isv:life_token_shard"
+      "item": "life_tokens:life_token_shard"
     }
   },
   "pattern": [
@@ -12,7 +12,7 @@
     "###"
   ],
   "result": {
-    "item": "isv:life_token"
+    "item": "life_tokens:life_token"
   },
   "show_notification": false
 }

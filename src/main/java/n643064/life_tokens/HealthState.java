@@ -1,4 +1,4 @@
-package n643064.isv;
+package n643064.life_tokens;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
@@ -7,7 +7,7 @@ import net.minecraft.world.PersistentStateManager;
 
 import java.util.HashMap;
 
-import static n643064.isv.ImprovedSurvival.MODID;
+import static n643064.life_tokens.LifeTokens.MODID;
 
 public class HealthState extends PersistentState
 {
