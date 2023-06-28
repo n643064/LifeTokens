@@ -2,11 +2,13 @@ package n643064.life_tokens;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
@@ -88,30 +90,49 @@ public class LifeTokens implements ModInitializer
         });
 
 
-        ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) ->
+        ServerEntityEvents.ENTITY_LOAD.register((entity, world) ->
         {
-            HealthState state = HealthState.get(newPlayer.server);
-            String s = newPlayer.getEntityName();
+            if (!(entity instanceof PlayerEntity player))
+            {
+                return;
+            }
+            final HealthState state = HealthState.get(world.getServer());
+            final String s = player.getEntityName();
             if (!state.map.containsKey(s))
             {
-                state.map.put(s, CONFIG.starterLife());
-                state.markDirty();
-                Objects.requireNonNull(newPlayer.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(CONFIG.starterLife());
-                newPlayer.setHealth(CONFIG.starterLife());
-            } else
-            {
-                int v;
-                if (CONFIG.resetOnDeath())
-                {
-                    v = CONFIG.starterLife();
-                    state.map.put(s, v);
-                } else
-                {
-                     v = state.map.get(s);
-                }
-                Objects.requireNonNull(newPlayer.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(v);
-                newPlayer.setHealth(v);
+                setupNewPlayer(s, state, player);
             }
         });
+
+        ServerPlayerEvents.COPY_FROM.register(((oldPlayer, newPlayer, alive) ->
+        {
+            final HealthState state = HealthState.get(newPlayer.server);
+            final String s = newPlayer.getEntityName();
+            final int v;
+            if (!state.map.containsKey(s))
+            {
+                setupNewPlayer(s, state, newPlayer);
+            }
+            if (CONFIG.resetOnDeath())
+            {
+                v = CONFIG.starterLife();
+                state.map.put(s, v);
+            } else
+            {
+                v = Math.max(1, state.map.get(s) - CONFIG.lifeLostOnDeath());
+                state.map.put(s, v);
+            }
+            Objects.requireNonNull(newPlayer.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(v);
+            newPlayer.setHealth(v);
+        }));
     }
+
+    void setupNewPlayer(String name, HealthState state, PlayerEntity player)
+    {
+        state.map.put(name, CONFIG.starterLife());
+        state.markDirty();
+        Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(CONFIG.starterLife());
+        player.setHealth(CONFIG.starterLife());
+    }
+
 }

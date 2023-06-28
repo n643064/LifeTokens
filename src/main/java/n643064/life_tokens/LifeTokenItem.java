@@ -32,21 +32,22 @@ public class LifeTokenItem extends Item
         {
             return TypedActionResult.fail(stack);
         }
-        if (user.getMaxHealth() < CONFIG.maxLife())
+        final HealthState state = HealthState.get(Objects.requireNonNull(user.getServer()));
+        final String name = user.getEntityName();
+        final int v;
+        if (state.map.containsKey(name))
         {
-            final HealthState state = HealthState.get(Objects.requireNonNull(user.getServer()));
-            final String name = user.getEntityName();
-            final int v;
-            if (state.map.containsKey(name))
-            {
-                v = state.map.get(user.getEntityName()) + CONFIG.lifeIncrement();
-            } else
-            {
-                v = CONFIG.starterLife() + CONFIG.lifeIncrement();
-            }
+            v = state.map.get(user.getEntityName()) + CONFIG.lifeIncrement();
+        } else
+        {
+            v = CONFIG.starterLife() + CONFIG.lifeIncrement();
+        }
+
+        if (v <= CONFIG.maxLife())
+        {
             state.map.put(name, v);
             state.markDirty();
-            Objects.requireNonNull(user.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(v);
+            Objects.requireNonNull(user.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(Math.max(1, v));
             stack.decrement(1);
             user.playSound(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, SoundCategory.PLAYERS, 0.8f, 2f);
             return TypedActionResult.success(stack);
