@@ -9,7 +9,8 @@ This simple mod adds consumable tokens, which can be used to increase a player's
   "maxLife": 60,
   "starterLife": 20,
   "lifeIncrement": 1,
-  "resetOnDeath": false
+  "resetOnDeath": false,
+  "lifeLostOnDeath": 0
 }
 ```
 
@@ -23,3 +24,5 @@ The modified chest loot tables are:
 - desert pyramid chests
 - jungle temple chests
 - woodland mansion chests
+
+[Downloads](https://modrinth.com/mod/life-tokens)
