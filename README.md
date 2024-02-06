@@ -11,6 +11,8 @@ This simple mod adds consumable tokens, which can be used to increase a player's
   "lifeIncrement": 1,
   "resetOnDeath": false,
   "lifeLostOnDeath": 0
+  "minLife": 1,
+  "showMessages": true,
 }
 ```
 

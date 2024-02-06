@@ -50,15 +50,17 @@ public class LifeTokenItem extends Item
             Objects.requireNonNull(user.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(Math.max(1, v));
             stack.decrement(1);
             user.playSound(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, SoundCategory.PLAYERS, 0.8f, 2f);
+            if(CONFIG.showMessages()){
+                user.sendMessage(Text.translatable("life_tokens.health_gained", CONFIG.lifeIncrement()).formatted(Formatting.GREEN), true);
+            }
             return TypedActionResult.success(stack);
         }
-        user.sendMessage(Text.translatable("life_tokens.limit_reached").formatted(Formatting.DARK_RED), true);
+        if(CONFIG.showMessages()) {
+            user.sendMessage(Text.translatable("life_tokens.limit_reached").formatted(Formatting.YELLOW), true);
+        }
         return TypedActionResult.fail(stack);
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack)
-    {
-        return true;
-    }
+    public boolean hasGlint(ItemStack stack) {  return true;    }
 }

@@ -20,6 +20,8 @@ import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 
@@ -115,12 +117,31 @@ public class LifeTokens implements ModInitializer
             }
             if (CONFIG.resetOnDeath())
             {
-                v = CONFIG.starterLife();
+                v = Math.max(CONFIG.starterLife(),1);
                 state.map.put(s, v);
+                if(CONFIG.showMessages()) {
+                    newPlayer.sendMessage(Text.translatable("life_tokens.life_reset", v).formatted(Formatting.DARK_RED), true);
+                }
             } else
             {
-                v = Math.max(1, state.map.get(s) - CONFIG.lifeLostOnDeath());
+                int currentHealth = state.map.get(s);
+                int lostHealth = CONFIG.lifeLostOnDeath();
+
+                if(CONFIG.minLife() < CONFIG.starterLife()){
+                    v = Math.max(Math.max(CONFIG.minLife(), currentHealth - lostHealth), 1);
+                } else {// If minLife is higher or equals to starterLife min=20 starter=10
+                    if (currentHealth > CONFIG.minLife()) {
+                        // If current health is greater than minLife, limit the lost health to not go below minLife
+                        v = Math.max(Math.max(CONFIG.minLife(), currentHealth - lostHealth), 1);
+                    } else {
+                        v = currentHealth;
+                    }
+                }
+
                 state.map.put(s, v);
+                if(CONFIG.lifeLostOnDeath()>0 && v!=CONFIG.minLife() && v!=currentHealth && CONFIG.showMessages()){
+                    newPlayer.sendMessage(Text.translatable("life_tokens.life_lost", CONFIG.lifeLostOnDeath()).formatted(Formatting.RED),true);
+                }
             }
             Objects.requireNonNull(newPlayer.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(v);
             newPlayer.setHealth(v);
@@ -134,5 +155,4 @@ public class LifeTokens implements ModInitializer
         Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(CONFIG.starterLife());
         player.setHealth(CONFIG.starterLife());
     }
-
 }
