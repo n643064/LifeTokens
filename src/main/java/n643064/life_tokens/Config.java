@@ -18,7 +18,9 @@ public record Config(
         int starterLife,
         int lifeIncrement,
         boolean resetOnDeath,
-        int lifeLostOnDeath
+        int lifeLostOnDeath,
+        int minLife,
+        boolean showMessages
 )
 {
     public static Config CONFIG = new Config(
@@ -29,7 +31,9 @@ public record Config(
             20,
             1,
             false,
-            0
+            0,
+            1,
+            true
     );
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().setLenient().create();
     static final String CONFIG_PATH = "config" + File.separator + "life_tokens.json";

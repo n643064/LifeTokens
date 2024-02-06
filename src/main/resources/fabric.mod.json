@@ -5,7 +5,8 @@
   "name": "Life Tokens",
   "description": "Adds life tokens, which increase player health by a set amount",
   "authors": [
-    "n643064"
+    "n643064",
+    "HaipaDev"
   ],
   "contact": {
     "repo": "https://github.com/n643064/LifeTokens"

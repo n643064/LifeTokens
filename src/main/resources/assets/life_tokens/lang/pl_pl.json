@@ -1,0 +1,10 @@
+{
+  "item.life_tokens.life_token_bit": "Fragmencik Tokenu Życia",
+  "item.life_tokens.life_token_shard": "Odłamek Tokenu Życia",
+  "item.life_tokens.life_token": "Token Życia",
+
+  "life_tokens.health_gained": "Maksymalne życie zwiększone o %s",
+  "life_tokens.limit_reached": "Limit maksymalnego życia",
+  "life_tokens.life_lost": "Straciłeś %s życia",
+  "life_tokens.life_reset": "Twoje życie zostało zresetowane do: %s"
+}

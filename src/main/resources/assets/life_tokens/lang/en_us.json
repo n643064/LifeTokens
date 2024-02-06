@@ -3,5 +3,8 @@
   "item.life_tokens.life_token_shard": "Life Token Shard",
   "item.life_tokens.life_token": "Life Token",
 
-  "life_tokens.limit_reached": "Life limit reached"
+  "life_tokens.health_gained": "Max Life increased by %s",
+  "life_tokens.limit_reached": "Max Life limit reached",
+  "life_tokens.life_lost": "You've lost %s health",
+  "life_tokens.life_reset": "Your life was reset to: %s"
 }
